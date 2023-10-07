@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap Tabs Plugin</title>
+  <!-- Include Bootstrap CSS and jQuery -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <style>
+    /* Add any custom CSS styles here */
+    .add-tab-button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .add-tab-button:focus {
+      outline: none;
+    }
+
+    .add-tab-button:hover {
+      background-color: transparent;
+      border: none;
+    }
+
+    .sortable-placeholder {
+      background-color: #f2f2f2;
+      border: 2px dashed #999;
+      height: 50px;
+    }
+    
+    /* Custom styles for right and bottom tabs */
+    .tabs-right {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+    
+    .tabs-bottom .nav-tabs {
+      margin-bottom: 0;
+    }
+
+    .tabs-bottom .tab-content {
+      margin-top: 20px;
+      flex-direction: row;
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <!-- Tab Position Examples -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Top Position -->
+      <div class="tabs col" id="tabs-container-top">
+        <ul class="nav nav-tabs sortable">
+          <!-- Tabs will be added here -->
+        </ul>
+        <div class="tab-content"></div>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-link add-tab-button">+ Add Tab</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Left Position -->
+      <div class="tabs col" id="tabs-container-left">
+        <ul class="nav nav-tabs sortable flex-column">
+          <!-- Tabs will be added here -->
+        </ul>
+        <div class="tab-content"></div>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-link add-tab-button">+ Add Tab</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Right Position -->
+      <div class="tabs-right col" id="tabs-container-right">
+        <ul class="nav nav-tabs sortable flex-column">
+          <!-- Tabs will be added here -->
+        </ul>
+        <div class="tab-content"></div>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-link add-tab-button">+ Add Tab</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Bottom Position -->
+      <div class="tabs-bottom col" id="tabs-container-bottom">
+        <div class="tab-content flex-row-reverse"> <!-- Updated class -->
+          <!-- Tab content will be added here -->
+        </div>
+        <ul class="nav nav-tabs sortable">
+          <!-- Tabs will be added here -->
+        </ul>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-link add-tab-button">+ Add Tab</button>
+      </div>
+    </div>
+  </div>
+  <!-- End of Tab Position Examples -->
+
+  <script>
+    (function ($) {
+      $.fn.bootstrapTabsPlugin = function (options) {
+        return this.each(function () {
+          const $container = $(this);
+
+          const settings = $.extend({
+            addTabButtonText: '+',
+            tabPosition: 'top', // Default tab position is top
+          }, options);
+
+          // Array to store the tab order
+          let tabOrder = [];
+
+          // Add a new tab
+          function addTab() {
+            const tabCount = tabOrder.length + 1;
+            const tabID = `tab-${tabCount}-${$container.attr('id')}`;
+            const tabContent = `<div class="tab-pane fade" id="${tabID}" role="tabpanel">Tab ${tabCount} content</div>`;
+
+            // Create the tab link
+            const tabLink = $('<li class="nav-item">' +
+              `<a class="nav-link" data-toggle="tab" href="#${tabID}">Tab ${tabCount}</a>` +
+              '<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+              '</li>');
+
+            // Add the tab link and content to the container
+            $container.find('.nav-tabs').append(tabLink);
+            $container.find('.tab-content').append(tabContent);
+
+            // Activate the new tab
+            $container.find('.nav-link:last').tab('show');
+
+            // Update the tab order
+            tabOrder.push(tabLink[0]);
+
+            // Make the tabs sortable
+            $container.find('.nav-tabs').sortable({
+              items: "li",
+              placeholder: "sortable-placeholder",
+              update: function (event, ui) {
+                // Update the tab order based on the new arrangement
+                tabOrder = $container.find('.nav-link').toArray();
+              }
+            });
+          }
+
+          // Remove a tab
+          function removeTab() {
+            const $tabToRemove = $(this).closest('li.nav-item');
+            const $targetTab = $($tabToRemove.find('a').attr('href'));
+
+            $tabToRemove.remove();
+            $targetTab.remove();
+
+            // Update the tab order
+            tabOrder = tabOrder.filter(tab => tab !== $tabToRemove[0]);
+
+            // Activate the last tab if any tabs remain
+            if (tabOrder.length > 0) {
+              $(tabOrder[tabOrder.length - 1]).find('a').tab('show');
+            }
+          }
+
+          // Add a new tab when clicking the "+" button
+          $container.siblings().find('.add-tab-button').on('click', addTab);
+
+          // Remove a tab when clicking the close button
+          $container.on('click', 'button.close', removeTab);
+
+          // Initialize the first tab
+          addTab();
+
+          // Store the settings specific to this element
+          $container.data('bootstrapTabsPluginSettings', settings);
+
+          // Set the tab position class and adjust tab content location
+          const $navTabs = $container.find('.nav-tabs');
+          if (settings.tabPosition === 'left' || settings.tabPosition === 'right') {
+            $container.addClass('d-flex');
+            $container.find('.tab-content').addClass('flex-grow-1');
+          }
+        });
+      };
+    }(jQuery));
+
+    $(document).ready(function () {
+      // Example with top position (default)
+      $('#tabs-container-top').bootstrapTabsPlugin({
+        addTabButtonText: '+',
+        tabPosition: 'top',
+      });
+
+      // Example with left position
+      $('#tabs-container-left').bootstrapTabsPlugin({
+        addTabButtonText: '+',
+        tabPosition: 'left',
+      });
+
+      // Example with right position
+      $('#tabs-container-right').bootstrapTabsPlugin({
+        addTabButtonText: '+',
+        tabPosition: 'right',
+      });
+
+      // Example with bottom position
+      $('#tabs-container-bottom').bootstrapTabsPlugin({
+        addTabButtonText: '+',
+        tabPosition: 'bottom',
+      });
+    });
+  </script>
+</body>
+</html>

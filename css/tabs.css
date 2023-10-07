@@ -1,0 +1,123 @@
+ 
+.tabs>.nav {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+   }
+  
+  .tabs>.nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+  }
+  
+  .tabs>.nav-link:hover, .tabs>.nav-link:focus {
+    text-decoration: none;
+  }
+  
+  .tabs>.nav-link.disabled {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: default;
+  }
+  
+  .tabs>.nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .tabs>.nav-tabs .tabs>.nav-link {
+    margin-bottom: -1px;
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+  }
+  
+  .tabs>.nav-tabs .tabs>.nav-link:hover, .tabs>.nav-tabs .tabs>.nav-link:focus {
+    border-color: #e9ecef #e9ecef #dee2e6;
+  }
+  
+  .tabs>.nav-tabs .tabs>.nav-link.disabled {
+    color: #6c757d;
+    background-color: transparent;
+    border-color: transparent;
+  }
+  
+  .tabs>.nav-tabs .tabs>.nav-link.active,
+  .tabs>.nav-tabs .tabs>.nav-item.show .tabs>.nav-link {
+    color: #495057;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+  }
+  
+  .tabs>.nav-tabs .dropdown-menu {
+    margin-top: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  
+  .tabs>.nav-pills .tabs>.nav-link {
+    border-radius: 0.25rem;
+  }
+  
+  .tabs>.nav-pills .tabs>.nav-link.active,
+  .tabs>.nav-pills .show > .tabs>.nav-link {
+    color: #fff;
+    background-color: #007bff;
+  }
+  
+  .tabs>.nav-fill > .tabs>.nav-link,
+  .tabs>.nav-fill .tabs>.nav-item {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    text-align: center;
+  }
+  
+  .tabs>.nav-justified > .tabs>.nav-link,
+  .tabs>.nav-justified .tabs>.nav-item {
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    text-align: center;
+  }
+
+.add-tab-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .add-tab-button:focus {
+    outline: none;
+  }
+
+  .add-tab-button:hover {
+    background-color: transparent;
+    border: none;
+  }
+
+  .sortable-placeholder {
+    background-color: #f2f2f2;
+    border: 2px dashed #999;
+    height: 50px;
+  }
+  
+  /* Custom styles for right and bottom tabs */
+  .tabs-right {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  
+  .tabs-bottom .tabs>.nav-tabs {
+    margin-bottom: 0;
+  }
+
+  .tabs-bottom .tab-content {
+    margin-top: 20px;
+    flex-direction: row;
+    display: flex;
+  }
